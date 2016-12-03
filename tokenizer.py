@@ -1,39 +1,60 @@
+# Author: Adam Kulisek, 3.12.2016
+#
+# Tokenizes input string (XML DTD)
+# into predefined token classes
+#
+# Example input string : "<!ELEMENT last_name  (#PCDATA)>"
+
 from token import Token
 import re
 
 class Tokenizer:
     # CLASS VARIABLES
-    # lowest level regular expressions
-    DIGIT = "[0-9]"
-    LETTER = "[A-Za-z]"
-    SPECIAL_CHAR = "[\#\^\&]"
-    DIGIT_REGEXP = "^"+DIGIT+"$"
-    LETTER_REGEXP = "^"+LETTER+"$"
-    CHAR_REGEXP = "^("+DIGIT+"|"+LETTER+"|"+SPECIAL_CHAR+")$"
-    NAMECHAR_REGEXP = "^("+DIGIT+"|"+LETTER+"|"+"[\.\-\:\_])$"
     # token regular expressions
-    WORD_REGEXP = "^[0-9A-Za-z\&\^\#]+$"
-    NAME_REGEXP = "^[A-Za-z\_\:][0-9A-Za-z\.\-\:\_]*$"
-    REQUIRED_REGEXP = "#REQUIRED"
-    IMPLIED_REGEXP = "#IMPLIED"
-    FIXED_REGEXP = "#FIXED"
+    WORD_REGEXP = "^([A-Za-z\_\:])[A-Za-z0-9\%\&\^\.\-\_\:]*$"
+    REQUIRED_REGEXP = "^(#REQUIRED)$"
+    IMPLIED_REGEXP = "^(#IMPLIED)$"
+    FIXED_REGEXP = "^(#FIXED)$"
     CDATA_REGEXP = "^(CDATA)$"
-    NMTOKEN_REGEXP = "NMTOKEN"
-    IDREF_REGEXP = "IDREF"
-    ATTLIST_REGEXP = "<!ATTLIST"
-    ELEMENT_REGEXP = "<!ELEMENT"
-    EMPTY_REGEXP = "EMPTY"
-    ANY_REGEXP = "ANY"
-    PCDATA_REGEXP = "(#PCDATA)"
+    NMTOKEN_REGEXP = "^(NMTOKEN)$"
+    IDREF_REGEXP = "^(IDREF)$"
+    ATTLIST_REGEXP = "^(!ATTLIST)$"
+    ELEMENT_REGEXP = "^(!ELEMENT)$"
+    EMPTY_REGEXP = "^(EMPTY)$"
+    ANY_REGEXP = "^(ANY)$"
+    PCDATA_REGEXP = "^(#PCDATA)$"
+
+    SPECIAL_CHARS_DELIMITER_REGEXP = "([\,\|\"\(\)])"
+    SPECIAL_CHARS_REGEXP = "^[\,\|\"\(\)]$"
+    ANGLE_BRACKETS_REGEXP = "^[\<\>]$"
+
     # METHODS
     # does a string match a regexp?
     def regexpMatch(self, string, regexp):
         return bool(re.compile(regexp).search(string))
 
+    # tokenize input sentences
     def tokenizeInput(self, input):
         tokens = []
-        words = input.split(' ')
+        right_bracket_bool = False
+        print "input: " + input
+        if input[0] == '<':
+            tokens.append(Token("SPECIAL", input[0]))
+            input = input[1:]
+        if input[-1] == '>':
+            right_bracket_char = input[-1]
+            input= input[:-1]
+            right_bracket_bool = True
+        if ' ' in input:
+            words = input.split(' ')
+        else:
+            words = re.split(self.SPECIAL_CHARS_DELIMITER_REGEXP, input)
+        print "words: "
         for word in words:
+            print "\t"+word
+        for word in words:
+            if word == '':
+                continue
             if self.regexpMatch(word, self.REQUIRED_REGEXP):
                 type = "REQUIRED"
             elif self.regexpMatch(word, self.IMPLIED_REGEXP):
@@ -56,15 +77,21 @@ class Tokenizer:
                 type = "ANY"
             elif self.regexpMatch(word, self.PCDATA_REGEXP):
                 type = "PCDATA"
-            elif self.regexpMatch(word, self.NAME_REGEXP):
-                type = "NAME"
             elif self.regexpMatch(word, self.WORD_REGEXP):
                 type = "WORD"
+            elif self.regexpMatch(word, self.SPECIAL_CHARS_REGEXP):
+                type = "SPECIAL"
             else:
                 type = "NONE"
+            if type == "NONE":
+                recursive_tokens = self.tokenizeInput(word)
+                for recursive_token in recursive_tokens:
+                    tokens.append(recursive_token)
+            else:
+                tokens.append(Token(type, word))
 
-            tokens.append(Token(type, word))
-
+        if right_bracket_bool:
+            tokens.append(Token("SPECIAL", right_bracket_char))
         print "tokens array length: " + str(len(tokens))
         print "tokens: "
         for token in tokens:
