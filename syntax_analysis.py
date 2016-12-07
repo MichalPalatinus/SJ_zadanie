@@ -24,7 +24,7 @@ DEFAULTDECL REQUIRED IMPLIED . . . . . . . . . . . . '"',B,WORD,'"',J . . . . . 
 J . . FIXED . . . . . . . . . . . @ . . . . . . . .\n\
 B . . . . . . . . . . . B,WORD . . . . . . . . . . .\n"
     # parse table structure:
-    #     < > ( ) | , " ? * + WORD REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA
+    #      REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA WORD , | \" ( ) < > ? * + $
     #   A
     #   B
     #   C
