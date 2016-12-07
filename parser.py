@@ -6,8 +6,8 @@ parser = argparse.ArgumentParser(description="Parser of basicDTD language")
 parser.add_argument('--input', help='Text to be parsed', type=str)
 args = parser.parse_args()
 
-#input_string = args.input
-input_string = "<!ATTLIST ahoj>"
+input_string = args.input
+
 if input_string:
     print "\tYou have specified this as an input: \n" + input_string + '\n'
     tokenizer = Tokenizer()

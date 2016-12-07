@@ -7,13 +7,22 @@ class SyntaxAnalysis:
     #   - @ denotes epsilon
     #   - . denotes empty item = error
     GRAMMAR = \
-    " < > ( ) | , \" ? * +\n\
-A . . . . @ . . . . .\n\
-B . . . . . . . . . .\n\
-C . . . . . . . . . .\n\
-D . . . . . . . . . .\n\
-E . . . . . . . . . .\n\
-F . . . . . . . . . .\n"
+    " REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA WORD , | \" ( ) < > ? * + $\n\
+DTDOC . . . . . . . . . . . . . . . . . L,DECLARATION . . . . .\n\
+L . . . . . . . . . . . . . . . . . DTDOC . . . . @\n\
+DECLARATION . . . . . . '>',Z,WORD,ATTLIST '>',X,WORD,ELEMENT . . . . . . . . . . . . . . .\n\
+X . . . . . . .  . EMPTY ANY PCDATA . . . . ')',F,'(' . . . . . . .\n\
+F . . . . . . . . . . . . . . . Y,K,CP,'(' . . . . . . .\n\
+y . . . . . . . . . . . . @ @ . . @ . . ? * + .\n\
+H . . . . . . . . . . . . H,CP,',' . . . @ . . . . . .\n\
+K . . . . . . . . . . . . ')',H,CP,',' ')',CP,'|' . . . . . . . . .\n\
+CP . . . . . . . . . . . Y,WORD . . . Y,K,CP,'(' . . . . . . .\n\
+Z . . . . . . . . . . . X,DEFAULTDECL,ATTRTYPE,WORD . . . . . . @ . . . .\n\
+ATTRTYPE . . . CDATA NMTOKEN IDREF . . . . . . . . . ')',E,WORD,'(' . . . . . . .\n\
+E . . . . . . . . . . . . . WORD,'|' . @ . . . . . . .\n\
+DEFAULTDECL REQUIRED IMPLIED . . . . . . . . . . . . '"',B,WORD,'"',J . . . . . . . .\n\
+J . . FIXED . . . . . . . . . . . @ . . . . . . . .\n\
+B . . . . . . . . . . . B,WORD . . . . . . . . . . .\n"
     # parse table structure:
     #     < > ( ) | , " ? * + WORD REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA
     #   A
