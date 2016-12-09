@@ -96,7 +96,6 @@ class Tokenizer:
 
         if right_bracket_bool:
             tokens.append(Token("SPECIAL", right_bracket_char))
-        tokens.append(Token("EOF", "$"))
         print "tokens array length: " + str(len(tokens))
         print "tokens: "
         for token in tokens:

@@ -74,8 +74,8 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
                 elif pop == "@":
                     stack.pop()
                 else:
-                    print("Error 1")
-                    return
+                    print("******** Error 1*************")
+                    position, stack = self.recovery(tokens, position, stack)
             else:
                 if self.PARSE_TABLE[pop][token] != ".":
                     rules = self.PARSE_TABLE[pop][token].split(';')
@@ -83,9 +83,24 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
                     for rule in rules:
                         stack.append(rule)
                 else:
-                    print("Error 2")
-                    return
+                    print("************ Error 2 ****************")
+                    position, stack = self.recovery(tokens, position, stack)
+
         print("Sentence accepted.")
+
+    def recovery(self, tokens, position, stack):
+        while tokens[position].value != ">":
+            position += 1
+        position += 1
+
+        while stack[len(stack)-2] != '>':
+            stack.pop()
+        stack.pop()
+        stack.pop()
+
+        return position, stack
+
+
 
 
 
