@@ -22,7 +22,7 @@ class Tokenizer:
     ELEMENT_REGEXP = "^(!ELEMENT)$"
     EMPTY_REGEXP = "^(EMPTY)$"
     ANY_REGEXP = "^(ANY)$"
-    PCDATA_REGEXP = "^(#PCDATA)$"
+    PCDATA_REGEXP = "^(\(#PCDATA\))$"
 
     SPECIAL_CHARS_DELIMITER_REGEXP = "([\,\|\"\(\)])"
     SPECIAL_CHARS_REGEXP = "^[\,\|\"\(\)\*\?\+]$"
@@ -47,6 +47,8 @@ class Tokenizer:
             right_bracket_bool = True
         if ' ' in input:
             words = input.split(' ')
+        elif input == "(#PCDATA)":
+            words = {input}
         else:
             words = re.split(self.SPECIAL_CHARS_DELIMITER_REGEXP, input)
         print "words: "
@@ -84,6 +86,8 @@ class Tokenizer:
             else:
                 type = "NONE"
             if type == "NONE":
+                print("type is none")
+                print(word)
                 recursive_tokens = self.tokenizeInput(word)
                 for recursive_token in recursive_tokens:
                     tokens.append(recursive_token)

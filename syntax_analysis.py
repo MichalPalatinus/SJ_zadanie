@@ -8,21 +8,22 @@ class SyntaxAnalysis:
     #   - . denotes empty item = error
     GRAMMAR = \
     " REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA WORD , | \" ( ) < > ? * + $\n\
-DTDOC . . . . . . . . . . . . . . . . . L,DECLARATION,< . . . . .\n\
+DTDOC . . . . . . . . . . . . . . . . . L;DECLARATION;< . . . . .\n\
 L . . . . . . . . . . . . . . . . . DTDOC . . . . @\n\
-DECLARATION . . . . . . >,Z,WORD,ATTLIST >,X,WORD,ELEMENT . . . . . . . . . . . . . . .\n\
-X . . . . . . . . EMPTY ANY PCDATA . . . . ),F,( . . . . . . .\n\
-F . . . . . . . . . . . . . . . Y,K,CP,( . . . . . . .\n\
+DECLARATION . . . . . . >;Z;WORD;ATTLIST >;X;WORD;ELEMENT . . . . . . . . . . . . . . .\n\
+X . . . . . . . . EMPTY ANY PCDATA . . . . );F;( . . . . . . .\n\
+F . . . . . . . . . . . . . . . Y;K;CP;( . . . . . . .\n\
 Y . . . . . . . . . . . . @ @ . . @ . . ? * + .\n\
-H . . . . . . . . . . . . H,CP,',' . . . @ . . . . . .\n\
-K . . . . . . . . . . . . ),H,CP,',' ),CP,| . . . . . . . . .\n\
-CP . . . . . . . . . . . Y,WORD . . . Y,K,CP,( . . . . . . .\n\
-Z . . . . . . . . . . . Z,DEFAULTDECL,ATTRTYPE,WORD . . . . . . @ . . . .\n\
-ATTRTYPE . . . CDATA NMTOKEN IDREF . . . . . . . . . ),E,WORD,( . . . . . . .\n\
-E . . . . . . . . . . . . . WORD,| . @ . . . . . . .\n\
-DEFAULTDECL REQUIRED IMPLIED . . . . . . . . . . . . \",B,WORD,\",J . . . . . . . .\n\
+H . . . . . . . . . . . . H;CP;, . . . @ . . . . . .\n\
+K . . . . . . . . . . . . );H;CP;, );CP;| . . ) . . . . . .\n\
+CP . . . . . . . . . . . Y;WORD . . . Y;K;CP;( . . . . . . .\n\
+Z . . . . . . . . . . . Z;DEFAULTDECL;ATTRTYPE;WORD . . . . . . @ . . . .\n\
+ATTRTYPE . . . CDATA NMTOKEN IDREF . . . . . . . . . );E;WORD;( . . . . . . .\n\
+E . . . . . . . . . . . . . WORD;| . . @ . . . . . .\n\
+DEFAULTDECL REQUIRED IMPLIED \";B;WORD;\";J . . . . . . . . . . . \";B;WORD;\";J . . . . . . . .\n\
 J . . FIXED . . . . . . . . . . . @ . . . . . . . .\n\
-B . . . . . . . . . . . B,WORD . . . . . . . . . . .\n"
+B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
+
     # parse table structure:
     #      REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA WORD , | \" ( ) < > ? * + $
     #   A
@@ -56,12 +57,11 @@ B . . . . . . . . . . . B,WORD . . . . . . . . . . .\n"
         stack.append('$')
         stack.append('DTDOC')
         position = 0
-        #while len(stack) > 0:
         pop = stack[len(stack)-1]
         while pop is not "$":
             pop = stack[len(stack) - 1]
             print(stack, tokens[position].value)
-            if tokens[position].type == 'SPECIAL' or tokens[position].type == 'EOF':
+            if tokens[position].type in {'SPECIAL', 'EOF'}:
                 token = tokens[position].value
             else:
                 token = tokens[position].type
@@ -78,7 +78,7 @@ B . . . . . . . . . . . B,WORD . . . . . . . . . . .\n"
                     return
             else:
                 if self.PARSE_TABLE[pop][token] != ".":
-                    rules = self.PARSE_TABLE[pop][token].split(',')
+                    rules = self.PARSE_TABLE[pop][token].split(';')
                     stack.pop()
                     for rule in rules:
                         stack.append(rule)
