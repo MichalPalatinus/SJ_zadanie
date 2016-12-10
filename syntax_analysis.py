@@ -76,7 +76,7 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
                 elif pop == "@":
                     stack.pop()
                 else:
-                    print("******** Error 1*************")
+                    print("******** Error 1**************")
                     position, stack = self.recovery(tokens, position, stack)
             else:
                 if self.PARSE_TABLE[pop][token] != ".":
