@@ -22,7 +22,8 @@ ATTRTYPE . . . CDATA NMTOKEN IDREF . . . . . . . . . );E;WORD;( . . . . . . .\n\
 E . . . . . . . . . . . . . WORD;| . . @ . . . . . .\n\
 DEFAULTDECL REQUIRED IMPLIED \";B;WORD;\";J . . . . . . . . . . . \";B;WORD;\";J . . . . . . . .\n\
 J . . FIXED . . . . . . . . . . . @ . . . . . . . .\n\
-B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
+B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n\
+NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
 
     # parse table structure:
     #      REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA WORD , | \" ( ) < > ? * + $
@@ -67,7 +68,8 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
                 token = tokens[position].type
             print("STACK: " + str(stack))
             print("TOP OF STACK: " + pop)
-            print("TOKEN: " + token)
+            print("TOKEN: " + tokens[position].type + " (" + tokens[position].value + ")")
+
             if pop not in self.PARSE_TABLE.keys() or pop is "$":
                 if token == pop:
                     stack.pop()
@@ -89,7 +91,7 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
                     print("ERROR: No match in Parse Table.")
                     position, stack = self.recovery(tokens, position, stack)
 
-        print("DONE")
+        print("\nDONE")
 
     def recovery(self, tokens, position, stack):
         print("RECOVERY:")
