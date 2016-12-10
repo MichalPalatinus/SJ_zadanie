@@ -51,6 +51,10 @@ class Tokenizer:
             words = {input}
         else:
             words = re.split(self.SPECIAL_CHARS_DELIMITER_REGEXP, input)
+        if len(words) == 1:
+            print "Cannot split input anymore, type is NONE"
+            tokens.append(Token("NONE", list(words)[0]))
+            return tokens
         print "words: "
         for word in words:
             print "\t"+word
