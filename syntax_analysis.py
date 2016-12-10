@@ -60,8 +60,16 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
         stack.append('DTDOC')
         position = 0
         pop = stack[len(stack)-1]
+        token = tokens[position]
         while pop is not "$":
-            print('\n')
+            print "\n--------------------"
+            print "Stack: " + str(stack)
+            print "Top of Stack: " + pop
+            if type(token) == type(''):
+                print "Token:\t" + str(token)
+            else:
+                print "Token:\t" + " value:" + str(token.value) + " type:" + str(token.type)
+            print "--------------------\n"
             pop = stack[len(stack) - 1]
             if tokens[position].type in {'SPECIAL', 'EOF', 'NONE'}:
                 token = tokens[position].value
@@ -118,23 +126,3 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
         for rule in reversed(rules):
             line  = line + " " + rule
         return line
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
