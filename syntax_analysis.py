@@ -48,7 +48,7 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
             columns = row[0:].split(' ')
             self.PARSE_TABLE[columns[0]] = {}
             for idx, column in enumerate(columns[1:]):
-                print(columns[0], columns_indexes[idx], column)
+                #print(columns[0], columns_indexes[idx], column)
                 self.PARSE_TABLE[columns[0]][columns_indexes[idx]] = column
 
 
@@ -59,15 +59,15 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
         position = 0
         pop = stack[len(stack)-1]
         while pop is not "$":
-            print("Stack: " + str(stack))
-            print("Top of Stack: " + pop)
-            print("Token: " + token)
+            print('\n')
             pop = stack[len(stack) - 1]
-            if tokens[position].type in {'SPECIAL', 'EOF'}:
+            if tokens[position].type in {'SPECIAL', 'EOF', 'NONE'}:
                 token = tokens[position].value
             else:
                 token = tokens[position].type
-            #print(token, pop)
+            print("STACK: " + str(stack))
+            print("TOP OF STACK: " + pop)
+            print("TOKEN: " + token)
             if pop not in self.PARSE_TABLE.keys() or pop is "$":
                 if token == pop:
                     stack.pop()
@@ -82,25 +82,36 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
                 if self.PARSE_TABLE[pop][token] != ".":
                     rules = self.PARSE_TABLE[pop][token].split(';')
                     stack.pop()
+                    print("Match found. Applying rules: " + pop + " -> " + self.printRules(rules))
                     for rule in rules:
                         stack.append(rule)
                 else:
-                    print("************ Error 2 ****************")
+                    print("ERROR: No match in Parse Table.")
                     position, stack = self.recovery(tokens, position, stack)
 
-        print("Sentence accepted.")
+        print("DONE")
 
     def recovery(self, tokens, position, stack):
+        print("RECOVERY:")
+        print("Skipping tokens:")
         while tokens[position].value != ">":
             position += 1
+            print("\t" + tokens[position].value)
         position += 1
 
+        print("Poping out of stack:")
         while stack[len(stack)-2] != '>':
-            stack.pop()
-        stack.pop()
-        stack.pop()
+            print("\t'" + stack.pop())
+        print("\t'" + stack.pop())
+        print("\t'" + stack.pop())
 
         return position, stack
+
+    def printRules(self, rules):
+        line = ""
+        for rule in reversed(rules):
+            line  = line + " " + rule
+        return line
 
 
 
