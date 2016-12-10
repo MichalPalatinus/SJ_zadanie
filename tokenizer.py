@@ -37,10 +37,12 @@ class Tokenizer:
     def tokenizeInput(self, input):
         tokens = []
         right_bracket_bool = False
+        left_bracket_bool = False
         print "input: " + input
         if input[0] == '<':
             tokens.append(Token("SPECIAL", input[0]))
             input = input[1:]
+            left_bracket_bool = True
         if input[-1] == '>':
             right_bracket_char = input[-1]
             input= input[:-1]
@@ -51,8 +53,8 @@ class Tokenizer:
             words = {input}
         else:
             words = re.split(self.SPECIAL_CHARS_DELIMITER_REGEXP, input)
-        if len(words) == 1:
-            print "Cannot split input anymore, type is NONE"
+        if len(words) == 1 and right_bracket_bool == False and left_bracket_bool == False:
+            print "Cannot split input: " + str(input) + " anymore, type is NONE"
             tokens.append(Token("NONE", list(words)[0]))
             return tokens
         print "words: "
@@ -90,8 +92,7 @@ class Tokenizer:
             else:
                 type = "NONE"
             if type == "NONE":
-                print("type is none")
-                print(word)
+                print "Recursive call for word: " + str(word)
                 recursive_tokens = self.tokenizeInput(word)
                 for recursive_token in recursive_tokens:
                     tokens.append(recursive_token)
