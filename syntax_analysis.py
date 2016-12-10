@@ -59,18 +59,20 @@ B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n"
         position = 0
         pop = stack[len(stack)-1]
         while pop is not "$":
+            print("Stack: " + str(stack))
+            print("Top of Stack: " + pop)
+            print("Token: " + token)
             pop = stack[len(stack) - 1]
-            print(stack, tokens[position].value)
             if tokens[position].type in {'SPECIAL', 'EOF'}:
                 token = tokens[position].value
             else:
                 token = tokens[position].type
-            print(token, pop)
+            #print(token, pop)
             if pop not in self.PARSE_TABLE.keys() or pop is "$":
                 if token == pop:
                     stack.pop()
                     position += 1
-                    print("TopOfStack equals token")
+                    print("Top Of Stack equals Token, so we pop Top of Stack and move to another token.")
                 elif pop == "@":
                     stack.pop()
                 else:
