@@ -41,6 +41,7 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
     #   nonterminals delimited by space for the given rule
     #
     PARSE_TABLE = {}
+    ERROR_COUNT = 0
 
     def initializeParseTable(self):
         rows = filter(None,self.GRAMMAR.split('\n'))
@@ -78,7 +79,8 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
                 elif pop == "@":
                     stack.pop()
                 else:
-                    print("******** Error 1**************")
+                    print("******** Error **************")
+                    self.ERROR_COUNT += 1
                     position, stack = self.recovery(tokens, position, stack)
             else:
                 if self.PARSE_TABLE[pop][token] != ".":
@@ -89,9 +91,11 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
                         stack.append(rule)
                 else:
                     print("***** ERROR: No match in Parse Table. *******")
+                    self.ERROR_COUNT += 1
                     position, stack = self.recovery(tokens, position, stack)
 
         print("\nDONE")
+        print("\t" + str(self.ERROR_COUNT) + " errors found.")
 
     def recovery(self, tokens, position, stack):
         print("***** RECOVERY:")
