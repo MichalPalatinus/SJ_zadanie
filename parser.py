@@ -8,7 +8,7 @@ parser.add_argument('--input', help='Text to be parsed', type=str)
 args = parser.parse_args()
 
 #input_string = args.input
-input_string = "<!ELEMENT _ahoj-cau. EMPTYY>"
+input_string = "<!ATTLIST Ahoj bla1_D CDATA #REQUIRED> <!ELEMENT ELEMENT _ahoj-cau. EMPTY>"
 
 if input_string:
     print "\tYou have specified this as an input: \n" + input_string + '\n'

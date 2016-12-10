@@ -88,13 +88,13 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
                     for rule in rules:
                         stack.append(rule)
                 else:
-                    print("ERROR: No match in Parse Table.")
+                    print("***** ERROR: No match in Parse Table. *******")
                     position, stack = self.recovery(tokens, position, stack)
 
         print("\nDONE")
 
     def recovery(self, tokens, position, stack):
-        print("RECOVERY:")
+        print("***** RECOVERY:")
         print("Skipping tokens:")
         while tokens[position].value != ">":
             position += 1
