@@ -24,7 +24,7 @@ class Tokenizer:
     ANY_REGEXP = "^(ANY)$"
     PCDATA_REGEXP = "^(\(#PCDATA\))$"
 
-    SPECIAL_CHARS_DELIMITER_REGEXP = "([\,\|\"\(\)])"
+    SPECIAL_CHARS_DELIMITER_REGEXP = "([\,\|\"\(\)\*\?\+])"
     SPECIAL_CHARS_REGEXP = "^[\,\|\"\(\)\*\?\+]$"
     ANGLE_BRACKETS_REGEXP = "^[\<\>]$"
 
