@@ -7,23 +7,22 @@ class SyntaxAnalysis:
     #   - @ denotes epsilon
     #   - . denotes empty item = error
     GRAMMAR = \
-    " REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA WORD , | \" ( ) < > ? * + $\n\
-DTDOC . . . . . . . . . . . . . . . . . L;DECLARATION;< . . . . .\n\
-L . . . . . . . . . . . . . . . . . DTDOC . . . . @\n\
-DECLARATION . . . . . . >;Z;WORD;ATTLIST >;X;WORD;ELEMENT . . . . . . . . . . . . . . .\n\
-X . . . . . . . . EMPTY ANY PCDATA . . . . );F;( . . . . . . .\n\
-F . . . . . . . . . . . . . . . Y;K;CP;( . . . . . . .\n\
-Y . . . . . . . . . . . . @ @ . . @ . . ? * + .\n\
-H . . . . . . . . . . . . H;CP;, . . . @ . . . . . .\n\
-K . . . . . . . . . . . . );H;CP;, );CP;| . . ) . . . . . .\n\
-CP . . . . . . . . . . . Y;WORD . . . Y;K;CP;( . . . . . . .\n\
-Z . . . . . . . . . . . Z;DEFAULTDECL;ATTRTYPE;WORD . . . . . . @ . . . .\n\
-ATTRTYPE . . . CDATA NMTOKEN IDREF . . . . . . . . . );E;WORD;( . . . . . . .\n\
-E . . . . . . . . . . . . . WORD;| . . @ . . . . . .\n\
-DEFAULTDECL REQUIRED IMPLIED \";B;WORD;\";J . . . . . . . . . . . \";B;WORD;\";J . . . . . . . .\n\
-J . . FIXED . . . . . . . . . . . @ . . . . . . . .\n\
-B . . . . . . . . . . . B;WORD . . @ . . . . . . . .\n\
-NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
+    " REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA WORD , | \" ( ) < > ? * + $ NONE\n\
+DTDOC . . . . . . . . . . . . . . . . . L;DECLARATION;< . . . . . .\n\
+L . . . . . . . . . . . . . . . . . DTDOC . . . . @ .\n\
+DECLARATION . . . . . . >;Z;WORD;ATTLIST >;X;WORD;ELEMENT . . . . . . . . . . . . . . . .\n\
+X . . . . . . . . EMPTY ANY PCDATA . . . . );F;( . . . . . . . .\n\
+F . . . . . . . . . . . . . . . Y;K;CP;( . . . . . . . .\n\
+Y . . . . . . . . . . . . @ @ . . @ . . ? * + . .\n\
+H . . . . . . . . . . . . H;CP;, . . . @ . . . . . . .\n\
+K . . . . . . . . . . . . );H;CP;, );CP;| . . ) . . . . . . .\n\
+CP . . . . . . . . . . . Y;WORD . . . Y;K;CP;( . . . . . . . .\n\
+Z . . . . . . . . . . . Z;DEFAULTDECL;ATTRTYPE;WORD . . . . . . @ . . . . .\n\
+ATTRTYPE . . . CDATA NMTOKEN IDREF . . . . . . . . . );E;WORD;( . . . . . . . .\n\
+E . . . . . . . . . . . . . WORD;| . . @ . . . . . . .\n\
+DEFAULTDECL REQUIRED IMPLIED \";B;WORD;\";J . . . . . . . . . . . \";B;WORD;\";J . . . . . . . . .\n\
+J . . FIXED . . . . . . . . . . . @ . . . . . . . . .\n\
+B . . . . . . . . . . . B;WORD . . @ . . . . . . . . .\n"
 
     # parse table structure:
     #      REQUIRED IMPLIED FIXED CDATA NMTOKEN IDREF ATTLIST ELEMENT EMPTY ANY PCDATA WORD , | \" ( ) < > ? * + $
@@ -62,6 +61,7 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
         pop = stack[len(stack)-1]
         token = tokens[position]
         while pop is not "$":
+            pop = stack[len(stack) - 1]
             print "\n--------------------"
             print "Stack: " + str(stack)
             print "Top of Stack: " + pop
@@ -70,8 +70,7 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
             else:
                 print "Token:\t" + " value:" + str(token.value) + " type:" + str(token.type)
             print "--------------------\n"
-            pop = stack[len(stack) - 1]
-            if tokens[position].type in {'SPECIAL', 'EOF', 'NONE'}:
+            if tokens[position].type in {'SPECIAL', 'EOF'}:
                 token = tokens[position].value
             else:
                 token = tokens[position].type
@@ -87,7 +86,7 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
                 elif pop == "@":
                     stack.pop()
                 else:
-                    print("******** Error **************")
+                    print("***** ERROR: No match in Parse Table. *******")
                     self.ERROR_COUNT += 1
                     position, stack = self.recovery(tokens, position, stack)
             else:
@@ -108,16 +107,17 @@ NONE . . . . . . . . . . . . . . . . . . . . . . .\n"
     def recovery(self, tokens, position, stack):
         print("***** RECOVERY:")
         print("Skipping tokens:")
-        while tokens[position].value != ">":
+        while tokens[position].value != ">" and tokens[position].value != "<":
             position += 1
             print("\t" + tokens[position].value)
-        position += 1
+        if tokens[position].value != "<":
+            position += 1
 
         print("Poping out of stack:")
-        while stack[len(stack)-2] != '>':
+        topOfStack = stack[len(stack)-1]
+        while topOfStack != 'L':
             print("\t'" + stack.pop())
-        print("\t'" + stack.pop())
-        print("\t'" + stack.pop())
+            topOfStack = stack[len(stack) - 1]
 
         return position, stack
 

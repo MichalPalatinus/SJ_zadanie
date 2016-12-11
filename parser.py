@@ -8,8 +8,7 @@ parser.add_argument('--input', help='Text to be parsed', type=str)
 args = parser.parse_args()
 
 #input_string = args.input
-input_string = "<!ATTLIST Ahoj bla1_D CDATA #REQUIRED> <!ELEMENT _ahoj-cau. EMPTY>"
-
+input_string = "<!ELEMENT PROGRAMSLOT (TIME,TITLE,DESCRIPTION?)>"
 if input_string:
     print "\tYou have specified this as an input: \n" + input_string + '\n'
     tokenizer = Tokenizer()
@@ -27,9 +26,9 @@ if input_string:
 # OK <!ATTLIST :merry^Christmas&PF%2017 Santa:Claus NMTOKEN #IMPLIED Jingl_Bells IDREF #REQUIRED>
 # OK <!ELEMENT Morho-detvo-mojho-rodu ANY>
 # OK <!ELEMENT from (#PCDATA)> <!ATTLIST Ahoj hulahej IDREF #REQUIRED>
-# OK <!ELEMENT I_LOVE_FIIT^^ ( ( or_not ? ) )>
-# OK <!ELEMENT Winter.is.coming. ( ( ( valar * | dohaeris * ) + ) )>
-# OK <!ATTLIST Waar kom ( je | u ) #FIXED \" vandaan \">
-# OK <!ATTLIST Strc _2_prsty ( skrz ) \" krk \">
-# OK <!ELEMENT integer ( ( bool , string , float ) * )>
+# OK <!ELEMENT I_LOVE_FIIT^^ ((or_not ?))>
+# OK <!ELEMENT Winter.is.coming. (((valar*|dohaeris*)+))>
+# OK <!ATTLIST Waar kom (je|u) #FIXED \"vandaan\">
+# OK <!ATTLIST Strc _2_prsty (skrz) \"krk\">
+# OK <!ELEMENT integer ((bool,string,float)*)>
 # "<!ATTLIST Ahoj bla1_D CDATA #REQUIRED> !ELEMENT _ahoj-cau. EMPTY> <!ATTLIST :merry^Christmas&PF%2017 Santa:Claus NMTOKEN #IMPLIED Jingl_Bells IDREF #REQUIRED> <!ELEMENT Morho-detvo-mojho-rodu ANY> <!ELEMENT from (#PCDATA)> <!ATTLIST Ahoj hulahej IDREF #REQUIRED> <!ELEMENT I_LOVE_FIIT^^ ( ( or_not ? ) )> <!ATTLIST Waar kom ( je | u ) #FIXED \" vandaan \"> <!ATTLIST Strc _2_prsty ( skrz ) \" krk \"> <!ELEMENT integer ( ( bool , string , float ) * )>"
